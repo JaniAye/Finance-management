@@ -6,7 +6,7 @@
 </head>
 <body>
   <%--  <img src="img_5terre_wide.jpg" alt="Cinque Terre" width="1000" height="300">--%>
-  <img class="topright" src="assets/user.png">
+  <img class="topright" src="assets/signOut.png" onclick="logOut()">
 
   <section>
     <div class="main-form-container">
@@ -16,9 +16,11 @@
             <div class="form-title">
               <h2 id="welcometxt">Welcome to ABC Finance</h2>
             </div>
-            <div class="action-button">
-              <button>Accounts</button>
-            </div>
+            <form action="Accounts" method="get">
+              <div class="action-button">
+                <button>Accounts</button>
+              </div>
+            </form>
               <div class="action-button">
                 <button>Services</button>
             </div>
@@ -33,5 +35,10 @@
 
     </div>
   </section>
+  <script>
+    function logOut() {
+      window.location.href = "index.jsp";
+    }
+  </script>
 </body>
 </html>
