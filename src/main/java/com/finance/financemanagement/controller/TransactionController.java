@@ -43,10 +43,6 @@ public class TransactionController extends HttpServlet {
             String username = (String) session.getAttribute("userName");
             int userByName = new UserDAO().getUserByName(username);
             int accountID = new AccountsDAO().getAccountByIdAndType(userByName, "savings");
-            System.out.println("accNo = " + accNo);
-            System.out.println("accNo = " + accountID);
-
-
 
                 boolean b = new TransactionDAO().insertTransaction(new Transaction(accountID, type, amount, date, remark));
                 if (type.equals("dipo")){

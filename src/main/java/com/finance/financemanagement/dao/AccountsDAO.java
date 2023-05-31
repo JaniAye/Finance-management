@@ -109,6 +109,7 @@ public class AccountsDAO {
             connectionPool.releaseConnection(conn);
         }
     }
+    //get account id from db using uid and account type
     public int getAccountByIdAndType(int uid,String type){
          ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection conn = connectionPool.getConnection();
@@ -129,6 +130,7 @@ public class AccountsDAO {
             connectionPool.releaseConnection(conn);
         }
     }
+    //get account id list from db using uid and account type
     public List getAccountIdList(int uid, String type){
          ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection conn = connectionPool.getConnection();
@@ -139,9 +141,7 @@ public class AccountsDAO {
 
             if (type.equals("fd"))
                 pst=conn.prepareStatement(" SELECT s.fd_id as id FROM fdaccount s JOIN account a ON s.account_id = a.account_id WHERE a.user_id =? AND a.account_type ='fixedDeposit' ");
-            System.out.println("uid jjjj = " + uid);
             pst.setInt(1,uid);
-//            pst.setString(2, type);
             ResultSet rst = pst.executeQuery();
             List<Integer> ids = new ArrayList<>();
 
@@ -149,8 +149,6 @@ public class AccountsDAO {
                 int accountId = rst.getInt("id");
                 ids.add(accountId);
             }
-            System.out.println("ids.size() = " + ids.size());
-
             return ids;
         } catch (SQLException e) {
             throw new RuntimeException(e);

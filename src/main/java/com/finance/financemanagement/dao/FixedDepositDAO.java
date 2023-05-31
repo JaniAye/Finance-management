@@ -34,7 +34,6 @@ public class FixedDepositDAO {
     }
     public int getAccountByIdAndType(int uid,String type){
 
-
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection conn = connectionPool.getConnection();
         try {

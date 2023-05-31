@@ -63,28 +63,37 @@
         var selectedValue = dropdown.options[dropdown.selectedIndex].value;
         var amount = document.getElementById("amount").value;
 
-        $.ajax({
-            url: "Accounts",
-            type: "POST",
-            data: {
-                accountType: selectedValue,
-                damount : amount
-            },
-            success: function(response) {
-                if (response.status === "fail"){
-                    console.log("fail")
-                    showAlert("First you have to create a Savings Account...");
-                }
-                if (response.status === "success"){
-                    showAlert("Account created...");
+        if (amount==='' || amount<1000){
+            showAlert("Enter Valid deposit amount...");
+        }else {
+            $.ajax({
+                url: "Accounts",
+                type: "POST",
+                data: {
+                    accountType: selectedValue,
+                    damount : amount
+                },
+                success: function(response) {
+                    if (response.status === "fail"){
+                        showAlert("Enter deposit amount...");
+                        document.getElementById("amount").focus();
+                    }
+                    if (response.status === "notValid"){
+                        showAlert("Invalid deposit amount...");
 
-                    window.location.href = "accounts.jsp";
+                        window.location.href = "accounts.jsp";
+                    }
+                    if (response.status === "success"){
+                        showAlert("Account created...");
+
+                        window.location.href = "accounts.jsp";
+                    }
+                },
+                error: function() {
+                    showAlert("An error occurred while processing the request.");
                 }
-            },
-            error: function() {
-                showAlert("An error occurred while processing the request.");
-            }
-        });
+            });
+        }
         // document.getElementById('selectedValue').value = selectedValue;
     }
     function showAlert(message) {

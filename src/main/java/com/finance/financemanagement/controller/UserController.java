@@ -3,11 +3,14 @@ package com.finance.financemanagement.controller;
 import com.finance.financemanagement.dao.UserDAO;
 import com.finance.financemanagement.model.User;
 import com.finance.financemanagement.util.EncryptPassword;
+import com.google.gson.Gson;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.finance.financemanagement.util.EncryptPassword.encryptPassword;
 
@@ -39,15 +42,26 @@ public class UserController extends HttpServlet {
         String userName = request.getParameter("userName");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-
-        String hashedPass =encryptPassword(password);
-
-        User user = new User(userName, hashedPass, email);
-        RequestDispatcher  dispatcher=request.getRequestDispatcher("index.jsp");
+        Map<String, Object> responseObject = new HashMap<>();
+        Gson gson = new Gson();
+        response.setContentType("application/json");
+        if (userName==null || email==null || password==null){
+            responseObject.put("result", "empty");
+            String jsonResponse = gson.toJson(responseObject);
+            response.getWriter().write(jsonResponse);
+        }else {
+            String hashedPass =encryptPassword(password);
+            User user = new User(userName, hashedPass, email);
+            RequestDispatcher  dispatcher=request.getRequestDispatcher("index.jsp");
             if (new UserDAO().insertUser(user))
-                request.setAttribute("status", "success" );
+                responseObject.put("result", "success");
             else
-                request.setAttribute("status", "fail" );
-            dispatcher.forward(request,response);
+                responseObject.put("result", "fail");
+
+            String jsonResponse = gson.toJson(responseObject);
+            response.getWriter().write(jsonResponse);
+
+        }
+
     }
 }

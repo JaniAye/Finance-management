@@ -73,27 +73,30 @@ public class AccountController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String accountType = request.getParameter("accountType");
-        double depositAmount = Double.parseDouble(request.getParameter("damount"));
-
+        Double depositAmount = Double.parseDouble(request.getParameter("damount"));
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("userName");
         int uid = new UserDAO().getUserByName(username);
-        if (uid<0){
-            //need error popup
-        }
+
         Map<String, Object> responseObject = new HashMap<>();
         Gson gson = new Gson();
         response.setContentType("application/json");
 
-        Accounts accounts = new Accounts(uid, accountType, depositAmount);
-        RequestDispatcher  dispatcher=request.getRequestDispatcher("accounts.jsp");
+        if (depositAmount==null || depositAmount<1000){
+            responseObject.put("status", "notValid");
+            String jsonResponse = gson.toJson(responseObject);
+            response.getWriter().write(jsonResponse);
+        }else {
+            Accounts accounts = new Accounts(uid, accountType, depositAmount);
+            RequestDispatcher  dispatcher=request.getRequestDispatcher("accounts.jsp");
             if (new AccountsDAO().insertAccount(accounts))
                 responseObject.put("status", "success");
             else
                 responseObject.put("status", "fail");
 
-        String jsonResponse = gson.toJson(responseObject);
-        response.getWriter().write(jsonResponse);
+            String jsonResponse = gson.toJson(responseObject);
+            response.getWriter().write(jsonResponse);
+        }
     }
 
 
