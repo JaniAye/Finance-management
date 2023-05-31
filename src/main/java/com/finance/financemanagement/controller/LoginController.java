@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static com.finance.financemanagement.util.EncryptPassword.encryptPassword;
+
 @WebServlet(name = "Login", value = "/Login")
 public class LoginController extends HttpServlet {
 
@@ -19,7 +21,9 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userName = request.getParameter("userName");
         String password = request.getParameter("password");
-        User user = new User(userName, password);
+
+        String hashedPass = encryptPassword(password);
+        User user = new User(userName, hashedPass);
         String usernm = new UserDAO().getUser(user);
         HttpSession session= request.getSession();
         RequestDispatcher dispatcher=null;

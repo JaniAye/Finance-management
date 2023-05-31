@@ -29,7 +29,6 @@ public class UserDAO {
 
     }
     public String getUser(User user){
-
         ConnectionPool connectionPool = ConnectionPool.getInstance();
         Connection conn = connectionPool.getConnection();
         try {

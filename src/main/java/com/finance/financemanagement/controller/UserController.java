@@ -2,11 +2,14 @@ package com.finance.financemanagement.controller;
 
 import com.finance.financemanagement.dao.UserDAO;
 import com.finance.financemanagement.model.User;
+import com.finance.financemanagement.util.EncryptPassword;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
+
+import static com.finance.financemanagement.util.EncryptPassword.encryptPassword;
 
 @WebServlet(name = "User", value = "/User")
 public class UserController extends HttpServlet {
@@ -37,7 +40,9 @@ public class UserController extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        User user = new User(userName, password, email);
+        String hashedPass =encryptPassword(password);
+
+        User user = new User(userName, hashedPass, email);
         RequestDispatcher  dispatcher=request.getRequestDispatcher("index.jsp");
             if (new UserDAO().insertUser(user))
                 request.setAttribute("status", "success" );
